@@ -1,0 +1,2 @@
+Ejecutar modelo local
+	ollama run qwen3
