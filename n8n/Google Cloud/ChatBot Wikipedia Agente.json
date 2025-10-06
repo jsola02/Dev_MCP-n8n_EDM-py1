@@ -1,0 +1,252 @@
+{
+  "name": "ChatBot Wikipedia Agente",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        -400
+      ],
+      "id": "32c28482-58b0-4145-b0a0-8d5608eebe14",
+      "name": "When chat message received",
+      "webhookId": "acf72a30-73a0-47b1-8189-0d81d2fe8504"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "##objetivo\nEres un asistente amigable llamado jose IA, que basa sus respuestas en https://es.wikipedia.org/\n\n##Reglas\n- regresa siempre respuestas de dos parrafos o menos.\n- siempre por las referencias de los articulos que consultas de wikipedia\n\n## tienes una \"tootle\" para conectarse a wikipedia y traer información. puedes usarla para confirmar información"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -192,
+        -336
+      ],
+      "id": "6ac823a7-05cf-4379-994f-a270af7204a1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "## Conectores OpenRouter\nacceso directo a traves de OpenRouter a modelos free",
+        "height": 304,
+        "width": 416,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "1f361414-12fb-440a-bed6-9f526221e373",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -80
+      ],
+      "id": "f7bb693a-0163-4111-88f1-84e3b271e961",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "muLEdmVAnOZTxEdt",
+          "name": "Google Gemini ch@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        -80
+      ],
+      "id": "801005cf-00f7-4bc5-8735-f6cafd3af15f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-4b:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        -96
+      ],
+      "id": "1d7fcbc1-1db9-4a6b-a9f7-71e9608a92a2",
+      "name": "OpenRouter QWEN",
+      "credentials": {
+        "openRouterApi": {
+          "id": "g7OCLpPwZGsGeCSx",
+          "name": "OpenRouter account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-r1:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -112
+      ],
+      "id": "5e2a23a7-2a7a-4e8b-bdbe-cec4e94a25e5",
+      "name": "OpenRouter DeepSeek",
+      "credentials": {
+        "openRouterApi": {
+          "id": "g7OCLpPwZGsGeCSx",
+          "name": "OpenRouter account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -80
+      ],
+      "id": "d2e8042a-c90f-4204-93b8-a26598563a62",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "content": "Url de Chat\nhttp://localhost:5678/webhook/acf72a30-73a0-47b1-8189-0d81d2fe8504/chat",
+        "height": 80,
+        "width": 576,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -752,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "e8323918-b02e-41a0-a4fc-0f2d0b69a78b",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter QWEN": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "OpenRouter DeepSeek": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ed1d8bd5-c21c-444c-b656-df76c404bfc2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2551d68775eb9557c6f646452fa2d1c7f8f444ea9b813e1f43b361845cee71e1"
+  },
+  "id": "akbxYVQtkPM8TSwh",
+  "tags": [
+    {
+      "createdAt": "2025-10-05T20:59:58.828Z",
+      "updatedAt": "2025-10-05T20:59:58.828Z",
+      "id": "9GvrkkL8gl1I3mmD",
+      "name": "BD"
+    },
+    {
+      "createdAt": "2025-10-05T20:49:28.239Z",
+      "updatedAt": "2025-10-05T20:49:28.239Z",
+      "id": "A6rl4Hz3e3twObzY",
+      "name": "Deepseek"
+    },
+    {
+      "createdAt": "2025-09-30T14:20:27.003Z",
+      "updatedAt": "2025-10-05T21:43:23.163Z",
+      "id": "Zt7pV7emVvKj4hFN",
+      "name": "Qwen3"
+    },
+    {
+      "createdAt": "2025-09-30T14:50:19.842Z",
+      "updatedAt": "2025-09-30T14:50:19.842Z",
+      "id": "vIGcD0DWvQARdgas",
+      "name": "OpenRouter"
+    },
+    {
+      "createdAt": "2025-10-05T20:49:34.313Z",
+      "updatedAt": "2025-10-05T20:49:34.313Z",
+      "id": "yIxawU6n7BR2v6qR",
+      "name": "Gemini"
+    }
+  ]
+}

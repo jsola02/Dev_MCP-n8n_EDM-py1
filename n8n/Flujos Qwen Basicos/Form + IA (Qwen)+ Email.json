@@ -1,0 +1,218 @@
+{
+  "name": "Form + IA (Qwen)+ Email",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        64,
+        128
+      ],
+      "id": "6aee21c8-af26-4017-961b-2a9ae8c2227a",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "sendTo": "jose.sola.n@outlook.com",
+        "subject": "=Mensaje Motivacional de {{ $('Formulario Web1').item.json.Nombre }}",
+        "message": "={{ $json.data }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        128
+      ],
+      "id": "222a9170-ac4b-4916-901e-3ff1919a585b",
+      "name": "Send a message",
+      "webhookId": "fc84d8a7-ab7b-4da5-b1d7-a3ae0202a0ed",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "djLrGzXQCY7jjSP4",
+          "name": "Gmail - CHP@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "= genera única y exclusivamente un mensaje personalizado listo para usar en un flujo de n8n, con las siguientes características: \n\n    Tono: empático, natural y claro, como si lo hubiera escrito directamente el usuario. \n\n    Estilo: conversacional, humano, sin estructuras robóticas ni frases genéricas como \"me gustaría formar parte\" o \"estoy muy motivado\". \n\n    Integración de variables: usa los datos del formulario de forma fluida, sin mencionar etiquetas como \"motivación:\", \"experiencia:\" ni listar campos. \n\n    Variables disponibles (en formato Handlebars): \n        {{ $json.Nombre }}\n        {{ $json['Experiencia laboral (años)'] }}\n        {{ $json['Cual es tu motivacion para trabajar con nosotros?'] }}\n         \n\n    No debes incluir: \n        Frases como: \"Aquí tienes el mensaje\", \"Con agradecimiento\", \"Espero que sea útil\", \"Notas técnicas para n8n\", \"Puedes ajustar...\", etc.\n        Explicaciones, comentarios técnicos, sugerencias ni texto fuera del mensaje final.\n        Despedidas automáticas como [Nombre], [Empresa] o estructuras entre corchetes.\n        Emojis o markdown si no son parte del mensaje real del usuario.\n         \n\n    Resultado esperado:\n    Solo el mensaje final, como si una persona lo hubiera escrito tras enviar un formulario. Listo para copiar y pegar en un nodo de Handlebars o Function Item en n8n. Ademas entrega una sugerencia en que industria o cual es su campo laboral actual\n     ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -256,
+        128
+      ],
+      "id": "662b5a70-4223-48cd-82e3-807c290c3288",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "formTitle": "Consulta Laboral",
+        "formDescription": "Detalles Sobre tus habilidades",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "placeholder": "Nombre Completo"
+            },
+            {
+              "fieldLabel": "Rut",
+              "placeholder": "Sin puntos con guion"
+            },
+            {
+              "fieldLabel": "Experiencia laboral (años)",
+              "fieldType": "number",
+              "placeholder": "cantidad de años"
+            },
+            {
+              "fieldLabel": "Cual es tu motivación para trabajar con nosotros, que tecnología manejas o experiencia laboral tienes?",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -496,
+        128
+      ],
+      "id": "74d84d01-8346-4632-aefb-4cb060b58062",
+      "name": "Formulario Web1",
+      "webhookId": "89c85a60-c777-469b-ac6a-6b64c5ab842d"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-8b:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        336
+      ],
+      "id": "2740c778-df8f-44ac-a99b-15d6426e52ac",
+      "name": "OpenRouter Chat Qwen",
+      "credentials": {
+        "openRouterApi": {
+          "id": "g7OCLpPwZGsGeCSx",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Formulario Para Ayudar en Postulaciones\n**Potencia tu experiencia para postulaciones**",
+        "height": 272,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -592,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "f0f02cff-e5fc-44df-b140-9e7054bfee13",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formulario Web1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Qwen": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2129b658-034c-4339-ad63-a9ee7eea05a3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2551d68775eb9557c6f646452fa2d1c7f8f444ea9b813e1f43b361845cee71e1"
+  },
+  "id": "XywVUeCfKs4aO458",
+  "tags": [
+    {
+      "createdAt": "2025-09-25T16:10:44.471Z",
+      "updatedAt": "2025-09-25T16:10:44.471Z",
+      "id": "N2BwqYAYUATMCVmG",
+      "name": "gmail"
+    },
+    {
+      "createdAt": "2025-09-30T14:20:27.003Z",
+      "updatedAt": "2025-10-05T21:43:23.163Z",
+      "id": "Zt7pV7emVvKj4hFN",
+      "name": "Qwen3"
+    },
+    {
+      "createdAt": "2025-09-30T14:16:25.073Z",
+      "updatedAt": "2025-09-30T14:16:25.073Z",
+      "id": "uK0XwofWCEw1tEPo",
+      "name": "Venice.ai"
+    },
+    {
+      "createdAt": "2025-09-30T14:50:19.842Z",
+      "updatedAt": "2025-09-30T14:50:19.842Z",
+      "id": "vIGcD0DWvQARdgas",
+      "name": "OpenRouter"
+    }
+  ]
+}

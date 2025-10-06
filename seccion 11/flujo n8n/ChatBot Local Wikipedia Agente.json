@@ -1,0 +1,182 @@
+{
+  "name": "ChatBot Local Wikipedia Agente",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        -400
+      ],
+      "id": "333d1ef4-f3a7-4043-8fa9-bf87fdd3d2ea",
+      "name": "When chat message received",
+      "webhookId": "c5ea50e2-8351-448a-a00c-5e1491607d21"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "##objetivo\nEres un asistente amigable llamado jose IA, que basa sus respuestas en https://es.wikipedia.org/\n\n##Reglas\n- regresa siempre respuestas de dos parrafos o menos.\n- siempre por las referencias de los articulos que consultas de wikipedia\n\n## tienes una \"tootle\" para conectarse a wikipedia y traer información. puedes usarla para confirmar información"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -192,
+        -336
+      ],
+      "id": "80b56a86-7612-41e2-8948-e15fc9025d24",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        -112
+      ],
+      "id": "ad99393c-7a2b-4557-a9e2-4857f2f76f40",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "muLEdmVAnOZTxEdt",
+          "name": "Google Gemini ch@gmail.com"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        -80
+      ],
+      "id": "723c2589-218e-4004-adb0-dcdd15076cc5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        32,
+        -80
+      ],
+      "id": "30210dcc-dcbe-41ed-80f8-e36d44857c8f",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -80
+      ],
+      "id": "0c182f86-bcf4-435d-aa8c-b6956c4b076a",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gh49JHy1ncqb559B",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8226b3c0-2f90-41db-ba30-57642ede140e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2551d68775eb9557c6f646452fa2d1c7f8f444ea9b813e1f43b361845cee71e1"
+  },
+  "id": "D2Ra1OAWa8KElEqr",
+  "tags": [
+    {
+      "createdAt": "2025-10-05T21:36:56.550Z",
+      "updatedAt": "2025-10-05T21:36:56.550Z",
+      "id": "07x3ECVj24zt5ljs",
+      "name": "Ollama"
+    },
+    {
+      "createdAt": "2025-10-05T20:59:58.828Z",
+      "updatedAt": "2025-10-05T20:59:58.828Z",
+      "id": "9GvrkkL8gl1I3mmD",
+      "name": "BD"
+    },
+    {
+      "createdAt": "2025-09-30T14:20:27.003Z",
+      "updatedAt": "2025-10-05T21:43:23.163Z",
+      "id": "Zt7pV7emVvKj4hFN",
+      "name": "Qwen3"
+    }
+  ]
+}
