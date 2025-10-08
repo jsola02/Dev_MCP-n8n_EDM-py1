@@ -1,0 +1,131 @@
+{
+  "name": "Pokemon Finder Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"name\": \"Pikachu\" \n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -432,
+        -16
+      ],
+      "id": "90c248e2-e88d-430f-9b59-5b336721bfe5",
+      "name": "Inicio Datos Entrada"
+    },
+    {
+      "parameters": {
+        "url": "=https://pokeapi.co/api/v2/pokemon/{{$json.name.trim().toLowerCase()}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -224,
+        -16
+      ],
+      "id": "9e48794e-9b4c-492d-912f-06284bb9e142",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "97df88d0-41c2-4531-bf43-4d6b563cba4c",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "5152bf23-7ff8-471a-86ef-ad2c716134f3",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "edbd9923-8ad8-4e77-92d9-35ed9d378820",
+              "name": "sprites.back_default",
+              "value": "={{ $json.sprites.back_default }}",
+              "type": "string"
+            },
+            {
+              "id": "0c03c1d3-1251-4d2a-a1e0-779794062e50",
+              "name": "sprites.front_default",
+              "value": "={{ $json.sprites.front_default }}",
+              "type": "string"
+            },
+            {
+              "id": "1f4b3795-41c6-4410-850f-4309c2cccaf9",
+              "name": "types[0].type.name",
+              "value": "={{ $json.types[0].type.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        -16
+      ],
+      "id": "a73f9853-a384-4ec8-8de9-1e26f9ed81d0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "Informacion que viene desde otro workflow, como test de deja pineado en json datos que se podrian entregar\n",
+        "height": 96,
+        "width": 256,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "d04a6f13-0c5c-40c7-8261-060ded399c80",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Inicio Datos Entrada": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1494d9b9-9556-4878-8950-9c1dcba16990",
+  "meta": {
+    "instanceId": "2551d68775eb9557c6f646452fa2d1c7f8f444ea9b813e1f43b361845cee71e1"
+  },
+  "id": "yIydaq5LSSWeAUGn",
+  "tags": []
+}

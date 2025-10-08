@@ -1,0 +1,1 @@
+'{{ $json.id }}' in parents and mimeType != 'application/vnd.google-apps.folder'

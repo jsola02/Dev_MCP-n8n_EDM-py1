@@ -1,0 +1,459 @@
+{
+  "name": "Asistente Personal Mails Calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        -144
+      ],
+      "id": "dc0a48ad-a12e-4a31-910f-389ac6dc8991",
+      "name": "When chat message received",
+      "webhookId": "270279db-23dc-4b83-8283-5ed0359d0c1f"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Descripción\n- Eres un asistente de AI que administra correos electrónicos y calendario de forma eficiente.\n- Tus respuestas deben ser cortas, claras y directas.\n- Prioriza siempre la organización y productividad.\n\n# Reglas de calendario\n- Horario laboral: 8am a 4pm (Lunes a Viernes).\n- No agendar fuera del horario laboral ni en fines de semana.\n- No permitir traslapes: verificar disponibilidad antes de agendar.\n- Confirmar siempre antes de crear, modificar o cancelar eventos.\n- Enviar recordatorios 15 minutos antes de cada evento.\n- Resumir eventos diarios al inicio del día y semanales los lunes a primera hora.\n\n# Reglas de correo electrónico\n- Lectura: siempre en texto plano, sin HTML.\n- Antes de enviar un correo, siempre crear un borrador (en formato HTML) y regresalo para confirmar antes de enviarlo.\n- Envío: al enviar un correo electronico, crear su estructura en formato HTML.\n- Clasificación: agrupar por prioridad (Alta > Media > Baja).\n- Ignorar: correos promocionales, spam y notificaciones irrelevantes.\n- Resumir correos importantes al inicio del día.\n- Confirmar siempre antes de eliminar o archivar correos.\n- Proponer respuestas rápidas para correos de alta prioridad.\n- No coloques \"[Tu Nombre]\", siempre pon \"Jose Sola N\" en su lugar.\n\n# Herramientas - Tools\n- Acceso al calendario: crear, modificar, cancelar eventos, obtener eventos.\n- Acceso al correo: leer, redactar, clasificar y enviar correos.\n- Puede integrarse con listas de tareas y recordatorios para mejorar la productividad.\n\n# La fecha actual es:\n{{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        144,
+        -144
+      ],
+      "id": "0da2172d-dd3c-4962-9427-796368eaa9d4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        96
+      ],
+      "id": "3669edac-42fd-4a2b-ac11-4e19364f81fd",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "muLEdmVAnOZTxEdt",
+          "name": "Google Gemini ch@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -224,
+        304
+      ],
+      "id": "54555c96-d848-4787-ac73-b99c4053cf5d",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "9728aecb5cc8e1a5d5d9ff8ae8765299c7238bcba8bf6639841b80c723a4cae8@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Planificacion n8n"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1152,
+        -96
+      ],
+      "id": "5d86ec7e-0da5-45e3-b853-35c09a803d98",
+      "name": "Obtener Eventos Calendario CH",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "hZ278jx3u9odwjkk",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "9728aecb5cc8e1a5d5d9ff8ae8765299c7238bcba8bf6639841b80c723a4cae8@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Planificacion n8n"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        992,
+        -96
+      ],
+      "id": "27a0eb28-898d-454e-85a3-7b767b81d244",
+      "name": "Crear Eventos Calendario CH",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "hZ278jx3u9odwjkk",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        240
+      ],
+      "id": "2d532fb4-5dc7-4167-87b7-e8be123d36e5",
+      "name": "Enviar email CH",
+      "webhookId": "0c55e0a6-5e80-4b2a-a730-89b671e364db",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "djLrGzXQCY7jjSP4",
+          "name": "Gmail - CHP@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "html",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        240
+      ],
+      "id": "102867a2-9a2b-4583-9827-6d8579ae9bac",
+      "name": "Crear Borrador CH",
+      "webhookId": "0c55e0a6-5e80-4b2a-a730-89b671e364db",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "djLrGzXQCY7jjSP4",
+          "name": "Gmail - CHP@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        784,
+        240
+      ],
+      "id": "82485728-e32f-423d-a273-0c55f3b055ef",
+      "name": "Obtener Varios mails CH",
+      "webhookId": "0c55e0a6-5e80-4b2a-a730-89b671e364db",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "djLrGzXQCY7jjSP4",
+          "name": "Gmail - CHP@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "9728aecb5cc8e1a5d5d9ff8ae8765299c7238bcba8bf6639841b80c723a4cae8@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Planificacion n8n"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "updateFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1312,
+        -96
+      ],
+      "id": "f03d628a-b5bf-40a4-bf04-7b429a8d09ff",
+      "name": "Obtener Eventos Calendario CH1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "hZ278jx3u9odwjkk",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Funciones para Google Calendar de CH@",
+        "height": 256,
+        "width": 528,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        928,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "1a1bf774-4fbc-4d5a-80fb-54660a3caba3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Tools Externas \notros workflow creados, que se llamaran\n",
+        "height": 224,
+        "width": 384,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -32,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "5e795dc9-1991-497c-9573-4dd22c5de5b3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "description": "herramienta ofrece información de Pokemon",
+        "workflowId": {
+          "__rl": true,
+          "value": "yIydaq5LSSWeAUGn",
+          "mode": "list",
+          "cachedResultName": "Pokemon Finder Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('name', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "name"
+          ],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        32,
+        240
+      ],
+      "id": "2aa60ecd-5432-477b-bd16-fbcef0d28fd9",
+      "name": "obtener_pokemon"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar email CH": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Borrador CH": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Varios mails CH": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Eventos Calendario CH": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Eventos Calendario CH": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Eventos Calendario CH1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_pokemon": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2d7d4adc-ea40-48e7-b22b-7dd98670cc02",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2551d68775eb9557c6f646452fa2d1c7f8f444ea9b813e1f43b361845cee71e1"
+  },
+  "id": "aO5ljPaGpr07smQ6",
+  "tags": [
+    {
+      "createdAt": "2025-10-06T00:39:55.281Z",
+      "updatedAt": "2025-10-06T00:39:55.281Z",
+      "id": "2HZfhJoDVZYlZVUW",
+      "name": "Agente"
+    },
+    {
+      "createdAt": "2025-10-05T20:59:58.828Z",
+      "updatedAt": "2025-10-05T20:59:58.828Z",
+      "id": "9GvrkkL8gl1I3mmD",
+      "name": "BD"
+    },
+    {
+      "createdAt": "2025-09-25T16:10:44.471Z",
+      "updatedAt": "2025-09-25T16:10:44.471Z",
+      "id": "N2BwqYAYUATMCVmG",
+      "name": "gmail"
+    },
+    {
+      "createdAt": "2025-10-06T02:53:07.025Z",
+      "updatedAt": "2025-10-06T02:53:07.025Z",
+      "id": "tNniwxtsTQx9ifNr",
+      "name": "calendar"
+    },
+    {
+      "createdAt": "2025-10-05T20:49:34.313Z",
+      "updatedAt": "2025-10-05T20:49:34.313Z",
+      "id": "yIxawU6n7BR2v6qR",
+      "name": "Gemini"
+    }
+  ]
+}
